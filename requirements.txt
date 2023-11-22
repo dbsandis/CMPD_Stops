@@ -1,3 +1,6 @@
 pandas
 altair
 streamlit
+ipykernel
+matplotlib
+seaborn
