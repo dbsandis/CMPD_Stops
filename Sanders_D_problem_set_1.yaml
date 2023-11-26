@@ -1,0 +1,934 @@
+schemaVersion: 3
+meta:
+  sourceVersionId: 702307c5-a929-4d45-aad6-55a8b80efc79 # DO NOT CHANGE - Hex uses this to match up project versions when reimporting the file
+  description: null
+  projectId: 9766666e-7e09-4b96-800a-3951a37c3829 # DO NOT CHANGE - Unique ID of the project from which this file was generated
+  title: Sanders_D_problem_set_1
+  timezone: null
+  appTheme: SYS_PREF
+  codeLanguage: PYTHON
+  status: null
+  categories: []
+  castDecimalsDefault: true
+  logicQueryCacheTimeout: null
+  publishedQueryCacheTimeout: null
+projectAssets:
+  dataConnections: []
+  envVars: []
+  secrets: []
+sharedAssets:
+  secrets: []
+  vcsPackages: []
+  dataConnections: []
+  externalFileIntegrations: []
+cells:
+  - cellType: CODE
+    cellId: d58d6436-66a3-4fc4-a8d7-3be08c39d8d7 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # Import packages
+
+        import pandas as pd
+        import altair as alt
+  - cellType: CODE
+    cellId: 7350e1f8-ee1b-4a44-ac05-09abca873c86 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # Load traffic stops data and create a dataframe called stops
+        # and check the columns and their types
+        # Load the CSV file into a DataFrame
+        file_path = "Officer_Traffic_Stops.csv"
+        stops = pd.read_csv(file_path)
+
+        # Display the columns and their data types
+        column_data_types = stops.dtypes
+        print(column_data_types)
+  - cellType: CODE
+    cellId: 27548fc1-7570-4055-b08f-33df022d9f5f # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # view the data by just typing the dataframe name
+        stops
+  - cellType: CODE
+    cellId: e1e585f6-aa01-4a23-9399-156920f68a3f # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # check the data using df.info()
+        stops.info()
+  - cellType: MARKDOWN
+    cellId: 97fe145e-0d2c-4e85-99ec-ccfc0864f64b # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        You will notice object and int64 this may not be what we would like so lets remember that
+
+        Let's consider our target variable: `Was_a_Search_Conducted`.
+
+        **Plot** a bar chart that counts the number of records by `Was_a_Search_Conducted`.
+  - cellType: CODE
+    cellId: aa659c92-320c-449e-994a-6d30db0622cb # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Bar chart
+        import matplotlib.pyplot as plt
+
+
+        # Create a bar chart to count the number of records by 'Was_a_Search_Conducted'
+        plt.figure(figsize=(8, 6))
+        stops['Was_a_Search_Conducted'].value_counts().plot(kind='bar', color='skyblue')
+        plt.title('Number of Records by Was_a_Search_Conducted')
+        plt.xlabel('Was_a_Search_Conducted')
+        plt.ylabel('Count')
+        plt.xticks(rotation=0)  # Remove rotation of x-axis labels if needed
+        plt.show()
+  - cellType: MARKDOWN
+    cellId: c6cb6c6b-5ffd-4ada-b659-32253a719222 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        Next, let's consider the age range of the driver. 
+
+        **Plot** a histogram of `Driver_Age`. Determine an appropriate number of bins.
+  - cellType: CODE
+    cellId: 894e3c4b-d254-4b51-abc7-9e70b7616c7d # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Histogram
+        import numpy as np
+        ## Histogram
+        # Calculate an appropriate number of bins using Freedman-Diaconis Rule
+        data_range = stops['Driver_Age'].max() - stops['Driver_Age'].min()
+        iqr = np.percentile(stops['Driver_Age'], 75) - np.percentile(stops['Driver_Age'], 25)
+        bin_width = 2 * iqr / (len(stops['Driver_Age']) ** (1/3))
+
+        # Determine the number of bins
+        num_bins = int(data_range / bin_width)
+
+        # Create a histogram
+        plt.figure(figsize=(8, 6))
+        plt.hist(stops['Driver_Age'], bins=num_bins, color='skyblue', edgecolor='black')
+        plt.title('Histogram of Driver Age')
+        plt.xlabel('Driver Age')
+        plt.ylabel('Frequency')
+        plt.show()
+  - cellType: MARKDOWN
+    cellId: aea21af5-9f4b-4195-8d2d-a66bfff94cda # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        Once you go above (around) 40-50 bins, you'll notice some points stick out. 
+
+        What is happening? It appears that the decade marks are cumulative of the decade
+  - cellType: MARKDOWN
+    cellId: 1c33d353-3fb6-4b40-9ba8-a3cb7a4ceb94 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: "**Plot** a box plot with `Was_a_Search_Conducted` on the x-axis and `Driver_Age` on the y-axis."
+  - cellType: CODE
+    cellId: 9dc0b837-4ac8-41be-b9c7-599720683953 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Box plot
+
+        plt.figure(figsize=(8, 6))
+        plt.boxplot(stops['Driver_Age'], vert=False)
+        plt.title('Box Plot of Driver Age')
+        plt.xlabel('Driver Age')
+        plt.show()
+  - cellType: MARKDOWN
+    cellId: 8ade7341-6fd0-4c17-8d4b-816735f18237 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: '**Plot** a violin plot where the fill is the response variable "Was_a_search_conducted" https://altair-viz.github.io/gallery/violin_plot.html'
+  - cellType: CODE
+    cellId: 54501b6d-b4b0-472c-a7ee-b5c1df67d699 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        # Violin plot
+        import seaborn as sns
+        # Use Seaborn to create the violin plot
+        plt.figure(figsize=(10, 6))
+        sns.violinplot(data=stops, x='Was_a_Search_Conducted', y='Driver_Age', inner='quart')
+        plt.title('Violin Plot of Driver Age by Search Conducted')
+        plt.xlabel('Search Conducted')
+        plt.ylabel('Driver Age')
+        plt.show()
+  - cellType: MARKDOWN
+    cellId: c55d6760-a1e8-4563-bed8-66f05a4ed5f9 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        From the plots above, do you think the age of the driver is a significant factor in whether a search was conducted? Why or why not? 
+        no because they have similar shapes regardless of search
+  - cellType: MARKDOWN
+    cellId: bd02bbe4-ae62-4cae-87b7-524c00005c23 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Date of stop
+
+        Let's plot the number of stops by time. 
+
+        Recalling part one, the `Month_of_Stop` variable is a character, not a date variable. The datatime's are simply when the data was collected; not when the stop occurred. Therefore, we'll need to convert the `Month_of_Stop` variable from a character to a Date format.
+
+        Uncomment out the next 4 code blocks these are given to you but please study and know what they do
+
+        *** It's used to change the data type of the "Month_of_Stop" column to datetime. the next one formats the datetime into a specific format
+  - cellType: CODE
+    cellId: 0fb9d7fb-6ea7-4a8a-abea-d31054faa20b # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: stops['Month_of_Stop'] = stops['Month_of_Stop'].astype('datetime64[ns]')
+  - cellType: CODE
+    cellId: d75ea7d2-4a9b-4dfb-b0b1-3bcee8a87c61 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: stops['Month_of_Stop'] = pd.to_datetime(stops['Month_of_Stop'], format='%y%m%d')
+  - cellType: CODE
+    cellId: ec04be5c-4823-4a3d-ae38-dc9b1f9cfed0 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: stops.info()
+  - cellType: CODE
+    cellId: c837860e-d1dc-4af0-86ed-b1bf426cbcd9 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: stops
+  - cellType: MARKDOWN
+    cellId: 9c10b127-2ae9-4619-bab4-af3fe6af100c # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: "**Plot** a line chart with the number of traffic stops for each month (hint: think about the aggregations we did in class.)."
+  - cellType: CODE
+    cellId: efb7181d-06f2-4648-8c09-cfc18f2d37aa # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Create a dataframe named stops_count for this graph that has a column named Month_of_Stop 
+        ## Also create a column named count representing the ammount of stops per month  https://sparkbyexamples.com/pandas/pandas-groupby-count-examples/
+
+        stops['Month_of_Stop'] = pd.to_datetime(stops['Month_of_Stop'], format='%Y-%m', errors='coerce')
+
+
+        # Group the stops by month and count the number of stops per month
+        stops_count = stops.groupby(stops['Month_of_Stop'].dt.to_period('M')).size().reset_index(name='count')
+
+        # Optionally, you can set 'Month_of_Stop' as the index
+        stops_count.set_index('Month_of_Stop', inplace=True)
+
+        # Display the resulting DataFrame
+        print(stops_count)
+  - cellType: CODE
+    cellId: 9658fe69-bde4-431c-8580-82e90f2b2a95 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        import pandas as pd
+        import altair as alt
+        import numpy as np
+
+        # Calculate the trendline function
+        def calculate_trendline(data):
+            x = np.arange(len(data))
+            y = data["count"]
+            coefficients = np.polyfit(x, y, 1)  # Fit a first-degree polynomial (line)
+            trendline = np.poly1d(coefficients)
+            return trendline(x)
+
+
+        # Load the CSV file into a DataFrame
+        file_path = "Officer_Traffic_Stops.csv"  # Replace with the actual path to your CSV file
+        stops = pd.read_csv(file_path)
+
+        # Convert 'Month_of_Stop' to datetime format
+        stops["Month_of_Stop"] = pd.to_datetime(
+            stops["Month_of_Stop"], format="%Y-%m-%d", errors="coerce"
+        )
+
+        # Group by month without modifying the original field and count the occurrences
+        stops_count = (
+            stops.groupby(stops["Month_of_Stop"].dt.to_period("M"))
+            .size()
+            .reset_index(name="count")
+        )
+
+        # Calculate the trendline
+        stops_count["trendline"] = calculate_trendline(stops_count)
+
+        # Convert 'Month_of_Stop' to string format for Altair plotting
+        stops_count["Month_of_Stop"] = stops_count["Month_of_Stop"].astype(str)
+
+        # Create an Altair line chart
+        chart = (
+            alt.Chart(stops_count)
+            .mark_line()
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("count:Q", title="Count"),
+                tooltip=["Month_of_Stop:T", "count:Q"],
+            )
+            .properties(
+                width=600, height=300, title="Line Chart of Counts by Month with Trendline"
+            )
+        )
+
+        # Add the trendline to the chart
+        trendline = (
+            alt.Chart(stops_count)
+            .mark_line(color="red")
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("trendline:Q", title="Trendline"),
+            )
+        )
+
+        # Combine the main chart and the trendline chart
+        final_chart = chart + trendline
+
+        # Display the Altair chart with the trendline
+        final_chart
+  - cellType: MARKDOWN
+    cellId: e0f04831-37e9-4070-8bab-bfd706b856b2 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        What is the trend (i.e., long term rate of change) of the number of traffic stops in Charlotte? 
+        This is the second iteration of the trend line, not sure why the first one showed an increasing trend, and this one is not as steep.  
+        But the trend shows an increase of the number of traffic stops.
+  - cellType: MARKDOWN
+    cellId: 8f0784ca-0931-444d-a9cc-ab763c21bf23 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |
+        **Plot** the same plot but add in `.facet()` by the `Reason_for_Stop` variable.
+  - cellType: CODE
+    cellId: 855533a8-3105-41b2-8adb-449618df8371 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |+
+        ## create the dataframe that groups by month and reason for stop 
+        # Assuming 'stops' is your original DataFrame
+
+        # Convert 'Month_of_Stop' to datetime format
+        stops["Month_of_Stop"] = pd.to_datetime(
+            stops["Month_of_Stop"], format="%Y-%m-%d", errors="coerce"
+        )
+
+        # Group by both 'Month_of_Stop' and 'Reason_for_Stop' and count occurrences
+        stops_grouped = stops.groupby([stops["Month_of_Stop"].dt.to_period("M"), "Reason_for_Stop"]).size().reset_index(name="count")
+
+        # Convert 'Month_of_Stop' back to string format for better readability (if needed)
+        stops_grouped["Month_of_Stop"] = stops_grouped["Month_of_Stop"].dt.strftime("%Y-%m-%d")
+
+        # Display the resulting DataFrame
+        print(stops_grouped)
+
+  - cellType: CODE
+    cellId: 6ee319c0-da45-4939-819c-cc4936bffe1f # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        ## Facet chart https://stackoverflow.com/questions/64770801/python-altair-facet-line-plot-with-multiple-variables
+        import pandas as pd
+        import altair as alt
+        import numpy as np
+
+        # Calculate the trendline function
+        def calculate_trendline(data):
+            x = np.arange(len(data))
+            y = data["count"]
+            coefficients = np.polyfit(x, y, 1)  # Fit a first-degree polynomial (line)
+            trendline = np.poly1d(coefficients)
+            return trendline(x)
+
+        # Load the CSV file into a DataFrame
+        file_path = "Officer_Traffic_Stops.csv"  # Replace with the actual path to your CSV file
+        stops = pd.read_csv(file_path)
+
+        # Convert 'Month_of_Stop' to datetime format
+        stops["Month_of_Stop"] = pd.to_datetime(
+            stops["Month_of_Stop"], format="%Y-%m-%d", errors="coerce"
+        )
+
+        # Group by month and 'Reason_for_Stop' without modifying the original field and count the occurrences
+        stops_count = (
+            stops.groupby([stops["Month_of_Stop"].dt.to_period("M"), "Reason_for_Stop"])
+            .size()
+            .reset_index(name="count")
+        )
+
+        # Calculate the trendline for each 'Reason_for_Stop'
+        stops_count["trendline"] = stops_count.groupby("Reason_for_Stop").apply(calculate_trendline).reset_index(level=0, drop=True)
+
+        # Convert 'Month_of_Stop' to string format for Altair plotting
+        stops_count["Month_of_Stop"] = stops_count["Month_of_Stop"].astype(str)
+
+        # Create an Altair line chart
+        chart = (
+            alt.Chart(stops_count)
+            .mark_line()
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("count:Q", title="Count"),
+                tooltip=["Month_of_Stop:T", "count:Q"],
+                color="Reason_for_Stop:N",
+            )
+            .properties(
+                width=600, height=300, title="Line Chart of Counts by Month with Trendline"
+            )
+        )
+
+        # Add the trendline to the chart
+        trendline = (
+            alt.Chart(stops_count)
+            .mark_line(color="red")
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("trendline:Q", title="Trendline"),
+                color="Reason_for_Stop:N",
+            )
+        )
+
+        # Combine the main chart and the trendline chart
+        final_chart = chart + trendline
+
+        # Display the Altair chart with the trendline
+        final_chart
+  - cellType: MARKDOWN
+    cellId: a3d2fe06-2d48-44e4-8362-7e3bb063ed68 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: What is a problem with this plot? very busy/cramped, maybe create a filter
+  - cellType: MARKDOWN
+    cellId: d9d6294a-11b4-49d1-9e06-33bc2aeb575a # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        To address this problem, you will need to figure out how to adjust the scale. To do this, you need to use altairs documentation to see whether there is a function that could help you.
+
+        https://altair-viz.github.io/user_guide/scale_resolve.html
+
+        What parameter allows you to modify the scales of `facet_wrap`? Y-axis scale for the "count" variable by setting zero=False within the alt.Scale() function. 
+  - cellType: MARKDOWN
+    cellId: fe0f1cf7-7010-46cf-adec-97156687cab6 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: "**Plot** the same plot but with a free y-axis scale. (This may take some research but very findable) -- creates multiple trends"
+  - cellType: CODE
+    cellId: 34fe35b4-20e1-4347-b6f5-e639ba7da719 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |
+        import pandas as pd
+        import altair as alt
+        import numpy as np
+
+        # Calculate the trendline function
+        def calculate_trendline(data):
+            x = np.arange(len(data))
+            y = data["count"]
+            coefficients = np.polyfit(x, y, 1)  # Fit a first-degree polynomial (line)
+            trendline = np.poly1d(coefficients)
+            return trendline(x)
+
+        # Load the CSV file into a DataFrame
+        file_path = "Officer_Traffic_Stops.csv"  # Replace with the actual path to your CSV file
+        stops = pd.read_csv(file_path)
+
+        # Convert 'Month_of_Stop' to datetime format
+        stops["Month_of_Stop"] = pd.to_datetime(
+            stops["Month_of_Stop"], format="%Y-%m-%d", errors="coerce"
+        )
+
+        # Group by month and 'Reason_for_Stop' without modifying the original field and count occurrences
+        stops_count = (
+            stops.groupby([stops["Month_of_Stop"].dt.to_period("M"), "Reason_for_Stop"])
+            .size()
+            .reset_index(name="count")
+        )
+
+        # Calculate the trendline for each 'Reason_for_Stop'
+        stops_count["trendline"] = stops_count.groupby("Reason_for_Stop").apply(calculate_trendline).reset_index(level=0, drop=True)
+
+        # Convert 'Month_of_Stop' to string format for Altair plotting
+        stops_count["Month_of_Stop"] = stops_count["Month_of_Stop"].astype(str)
+
+        # Create an Altair line chart with a free y-axis scale for each facet
+        chart = (
+            alt.Chart(stops_count)
+            .mark_line()
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("count:Q", title="Count", scale=alt.Scale(zero=False)),
+                tooltip=["Month_of_Stop:T", "count:Q"],
+                color="Reason_for_Stop:N",
+            )
+            .properties(
+                width=600, height=300, title="Line Chart of Counts by Month with Trendline"
+            )
+        )
+
+        # Add the trendline to the chart
+        trendline = (
+            alt.Chart(stops_count)
+            .mark_line(color="red")
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("trendline:Q", title="Trendline"),
+                color="Reason_for_Stop:N",
+            )
+        )
+
+        # Combine the main chart and the trendline chart
+        final_chart = chart + trendline
+
+        # Facet the chart by 'Reason_for_Stop' with a free y-axis scale
+        final_chart = final_chart.facet(column=alt.Column("Reason_for_Stop:N", title="Reason for Stop", header=alt.Header(labelAngle=-45, labelAlign="right")))
+
+        # Display the Altair chart with the trendline and facet
+        final_chart
+  - cellType: MARKDOWN
+    cellId: 792920e6-b3d9-4b79-9dce-f723339d3cc3 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: Which type of police stop has had the most volatility (i.e., big swings in number of stops)? Speeding
+  - cellType: MARKDOWN
+    cellId: d27d7e94-c55b-4298-8109-13b751b8634a # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: What is one problem with allowing the y-axis be free? multiple charts are created, makes it difficult to compare
+  - cellType: MARKDOWN
+    cellId: 89952e6b-75b4-4a5e-a9ea-9ca2144c2740 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        Small multiples trends to be less effective when each of the variables are on different scales or magnitudes.
+
+        Let's consider instead CMPD traffic stops but by CMPD division. These are more even spread by division than the type of stop.
+
+        **Plot** a line chart for stops by `Date` but grouped by Division instead of reason
+  - cellType: CODE
+    cellId: a0857af0-6677-4d31-9d24-1f6d3502ce6b # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |
+        # Facet plot for division stops
+        import pandas as pd
+        import altair as alt
+        import numpy as np
+
+        # Calculate the trendline function
+        def calculate_trendline(data):
+            x = np.arange(len(data))
+            y = data["count"]
+            coefficients = np.polyfit(x, y, 1)  # Fit a first-degree polynomial (line)
+            trendline = np.poly1d(coefficients)
+            return trendline(x)
+
+        # Load the CSV file into a DataFrame
+        file_path = "Officer_Traffic_Stops.csv"  # Replace with the actual path to your CSV file
+        stops = pd.read_csv(file_path)
+
+        # Convert 'Month_of_Stop' to datetime format
+        stops["Month_of_Stop"] = pd.to_datetime(
+            stops["Month_of_Stop"], format="%Y-%m-%d", errors="coerce"
+        )
+
+        # Group by month and 'CMPD_Division' without modifying the original field and count occurrences
+        stops_count = (
+            stops.groupby([stops["Month_of_Stop"].dt.to_period("M"), "CMPD_Division"])
+            .size()
+            .reset_index(name="count")
+        )
+
+        # Calculate the trendline for each 'CMPD_Division'
+        stops_count["trendline"] = stops_count.groupby("CMPD_Division").apply(calculate_trendline).reset_index(level=0, drop=True)
+
+        # Convert 'Month_of_Stop' to string format for Altair plotting
+        stops_count["Month_of_Stop"] = stops_count["Month_of_Stop"].astype(str)
+
+        # Create an Altair line chart for 'CMPD_Division' with adjusted scale
+        chart = (
+            alt.Chart(stops_count)
+            .mark_line()
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("count:Q", title="Count", scale=alt.Scale(zero=False)),
+                tooltip=["Month_of_Stop:T", "count:Q"],
+                color="CMPD_Division:N",
+            )
+            .properties(
+                width=600, height=300, title="Line Chart of Counts by Month with Trendline (Grouped by CMPD_Division)"
+            )
+        )
+
+        # Add the trendline to the chart
+        trendline = (
+            alt.Chart(stops_count)
+            .mark_line(color="red")
+            .encode(
+                x=alt.X("Month_of_Stop:T", title="Month"),
+                y=alt.Y("trendline:Q", title="Trendline"),
+                color="CMPD_Division:N",
+            )
+        )
+
+        # Combine the main chart and the trendline chart
+        final_chart = chart + trendline
+
+        # Display the Altair chart with the trendline
+        final_chart
+  - cellType: MARKDOWN
+    cellId: c53a7874-5f44-4b47-9162-e8864caf4708 # DO NOT CHANGE - Hex uses this to match up cells when reimporting the file, and detect any changes to existing cells
+    cellLabel: null
+    config:
+      source: |-
+        What are three observations you can make about the number of police stops by divison? (hint: just write about what's in the data.)
+
+        1. It's still cluttered but seem to follow the same trends,  
+
+        2. some of them do have big sways than others,
+
+        3. but are of the same scale
+appLayout:
+  visibleMetadataFields:
+    - NAME
+    - DESCRIPTION
+    - AUTHOR
+    - LAST_EDITED
+    - LAST_RUN
+    - CATEGORIES
+    - STATUS
+    - TABLE_OF_CONTENTS
+  fullWidth: false
+  tabs:
+    - name: Tab 1
+      rows:
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 7350e1f8-ee1b-4a44-ac05-09abca873c86
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 27548fc1-7570-4055-b08f-33df022d9f5f
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: e1e585f6-aa01-4a23-9399-156920f68a3f
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 97fe145e-0d2c-4e85-99ec-ccfc0864f64b
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: aa659c92-320c-449e-994a-6d30db0622cb
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: c6cb6c6b-5ffd-4ada-b659-32253a719222
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 894e3c4b-d254-4b51-abc7-9e70b7616c7d
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: aea21af5-9f4b-4195-8d2d-a66bfff94cda
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 1c33d353-3fb6-4b40-9ba8-a3cb7a4ceb94
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 8ade7341-6fd0-4c17-8d4b-816735f18237
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: c55d6760-a1e8-4563-bed8-66f05a4ed5f9
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: bd02bbe4-ae62-4cae-87b7-524c00005c23
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: ec04be5c-4823-4a3d-ae38-dc9b1f9cfed0
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: c837860e-d1dc-4af0-86ed-b1bf426cbcd9
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 9c10b127-2ae9-4619-bab4-af3fe6af100c
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: efb7181d-06f2-4648-8c09-cfc18f2d37aa
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 9658fe69-bde4-431c-8580-82e90f2b2a95
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: e0f04831-37e9-4070-8bab-bfd706b856b2
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 8f0784ca-0931-444d-a9cc-ab763c21bf23
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 855533a8-3105-41b2-8adb-449618df8371
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 6ee319c0-da45-4939-819c-cc4936bffe1f
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: a3d2fe06-2d48-44e4-8362-7e3bb063ed68
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: d9d6294a-11b4-49d1-9e06-33bc2aeb575a
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: fe0f1cf7-7010-46cf-adec-97156687cab6
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 792920e6-b3d9-4b79-9dce-f723339d3cc3
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: d27d7e94-c55b-4298-8109-13b751b8634a
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: 89952e6b-75b4-4a5e-a9ea-9ca2144c2740
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: a0857af0-6677-4d31-9d24-1f6d3502ce6b
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+        - columns:
+            - start: 0
+              end: 120
+              elements:
+                - showSource: false
+                  hideOutput: false
+                  type: CELL
+                  cellId: c53a7874-5f44-4b47-9162-e8864caf4708
+                  sharedFilterId: null
+                  height: null
+                  showLabel: true
+sharedFilters: []
